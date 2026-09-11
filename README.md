@@ -72,6 +72,32 @@ Each skill is a self-contained folder: `SKILL.md` plus a `references/`
 directory. Codex reads `.agents/skills/`, Claude Code reads `.claude/skills/`,
 Cursor reads `.cursor/skills/`.
 
+### Workflow with the Ploy CLI
+
+The native `ploy` binary needs no Node, npm, or Ploy login for this flow.
+
+1. Install the CLI: `curl -fsSL https://ploy.ai/install.sh | sh`.
+2. In your repository, run `ploy skills bootstrap`. It fetches `manifest.json`
+   from this repository (`main`; override with `--source <raw-url>`), validates
+   each skill, and writes:
+   - `.agents/skills/<id>/` - the skill files (read by Codex)
+   - `.claude/skills/<id>` - a relative symlink to the folder above (read by
+     Claude Code)
+   - `skills-lock.json` - the [skills.sh](https://skills.sh) lockfile:
+     `source`, `sourceType`, `skillPath`, and `computedHash` per skill. Commit
+     it with the skill folders.
+3. Start Codex or Claude Code in that repository and ask for the skill, e.g.
+   "Use the ploy-site skill to migrate this site into Ploy." The skill tells
+   the agent when `ploy login` becomes necessary.
+4. Keep skills current with `ploy skills sync --check` (exit 1 on a local edit
+   or a newer published version; use it as a pre-commit or CI gate) and
+   `ploy skills sync` to reinstall drifted skills and refresh the lock. Because
+   the lockfile is the skills.sh format, `npx skills check` and
+   `npx skills update` work on the same file when Node is available.
+
+`ploy skills bootstrap` never replaces a same-name skill folder it did not
+record; pass `--force` to take it over.
+
 ### Use
 
 Ask the agent to migrate the site, for example:
@@ -93,7 +119,9 @@ builds into a Ploy Astro destination, verifies it, and pushes with the
   standard-conformant clients
 
 Add a skill by creating `skills/<id>/SKILL.md` with `name` and `description`
-frontmatter and listing every file in `manifest.json`.
+frontmatter and listing every file in `manifest.json`. Editing a published
+file is enough to ship an update: `ploy skills sync --check` and
+`npx skills check` compare installed folder hashes with `main`.
 
 ### License
 
