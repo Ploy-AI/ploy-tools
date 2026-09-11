@@ -10,7 +10,7 @@ Immutable release assets for the Ploy CLI are published under
 ## Agent skills
 
 Agent skills for [Ploy](https://ploy.ai). Install them into any repository and
-run them with your own Codex or Claude subscription; no Ploy account is needed
+run them with your own Codex, Claude, or Cursor subscription; no Ploy account is needed
 to install, and the skills tell the agent when a Ploy login is required.
 
 | Skill | Purpose |
@@ -41,6 +41,23 @@ npx skills add Ploy-AI/ploy-tools
 /plugin install ploy@ploy
 ```
 
+**Codex plugin**
+
+```sh
+codex plugin marketplace add Ploy-AI/ploy-tools
+```
+
+Then install `ploy` from the `ploy` marketplace in `/plugins`. Codex also
+installs the bare skill with `$skill-installer` from
+`https://github.com/Ploy-AI/ploy-tools/tree/main/skills/ploy-site`.
+
+**Cursor**
+
+This repository is an [Agent Plugins](https://agent-plugins.org) package
+(`plugin.json` at the root), so it loads in Cursor unchanged: add it to a team
+marketplace with "Import from Repo", or clone it into `~/.cursor/plugins/local`.
+`npx skills add` above also writes `.cursor/skills/`.
+
 **Manual**
 
 ```sh
@@ -52,7 +69,8 @@ rm -rf /tmp/ploy-tools
 ```
 
 Each skill is a self-contained folder: `SKILL.md` plus a `references/`
-directory. Codex reads `.agents/skills/`, Claude Code reads `.claude/skills/`.
+directory. Codex reads `.agents/skills/`, Claude Code reads `.claude/skills/`,
+Cursor reads `.cursor/skills/`.
 
 ### Use
 
@@ -69,7 +87,10 @@ builds into a Ploy Astro destination, verifies it, and pushes with the
 - `skills/<id>/` - one folder per skill, the format read by Codex, Claude Code,
   and skills.sh
 - `manifest.json` - file list per skill, read by `ploy skills bootstrap`
-- `.claude-plugin/` - Claude Code plugin and marketplace metadata
+- `.claude-plugin/` - Claude Code plugin and marketplace metadata; Codex reads
+  the same `marketplace.json`
+- `plugin.json` - Agent Plugins manifest read by Cursor and other
+  standard-conformant clients
 
 Add a skill by creating `skills/<id>/SKILL.md` with `name` and `description`
 frontmatter and listing every file in `manifest.json`.

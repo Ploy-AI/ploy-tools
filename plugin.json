@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ploy",
+  "description": "Build or migrate a website into Ploy's Astro runtime and sync it with the Ploy CLI.",
+  "version": "0.1.0"
+}
