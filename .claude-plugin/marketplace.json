@@ -1,0 +1,18 @@
+{
+  "name": "ploy",
+  "owner": { "name": "Ploy AI", "url": "https://ploy.ai" },
+  "metadata": {
+    "description": "Agent skills for building and migrating sites on Ploy.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ploy",
+      "source": "./",
+      "description": "Build or migrate a website into Ploy's Astro runtime and sync it with the Ploy CLI.",
+      "version": "0.1.0",
+      "category": "development",
+      "keywords": ["ploy", "astro", "migration"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ploy",
+  "description": "Build or migrate a website into Ploy's Astro runtime and sync it with the Ploy CLI.",
+  "version": "0.1.0",
+  "author": { "name": "Ploy AI", "url": "https://ploy.ai" },
+  "homepage": "https://github.com/Ploy-AI/ploy-skills",
+  "repository": "https://github.com/Ploy-AI/ploy-skills",
+  "license": "MIT",
+  "keywords": ["ploy", "astro", "migration", "cloudflare-workers"]
+}
