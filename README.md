@@ -19,14 +19,13 @@ to install, and the skills tell the agent when a Ploy login is required.
 
 ### Install
 
-Run one of these in the repository you want the agent to work on.
-
-**Ploy CLI**
+**Ploy CLI** (installs the skills for your user, so every project sees them)
 
 ```sh
 curl -fsSL https://ploy.ai/install.sh | sh
-ploy skills bootstrap
 ```
+
+The others install into the repository you run them in.
 
 **skills.sh**
 
@@ -74,29 +73,33 @@ Cursor reads `.cursor/skills/`.
 
 ### Workflow with the Ploy CLI
 
-The native `ploy` binary needs no Node, npm, or Ploy login for this flow.
+The native `ploy` binary needs no Node, npm, or Ploy login for this flow. The
+skills here are user-level: they are meant for a user working in their own
+codebase with their own Codex or Claude subscription, before a Ploy site
+exists, so they are installed once per machine rather than per repository.
 
-1. Install the CLI: `curl -fsSL https://ploy.ai/install.sh | sh`.
-2. In your repository, run `ploy skills bootstrap`. It fetches `manifest.json`
-   from this repository (`main`; override with `--source <raw-url>`), validates
-   each skill, and writes:
-   - `.agents/skills/<id>/` - the skill files (read by Codex)
-   - `.claude/skills/<id>` - a relative symlink to the folder above (read by
+1. Install the CLI: `curl -fsSL https://ploy.ai/install.sh | sh`. The
+   installer runs `ploy skills bootstrap` for you (set
+   `PLOY_INSTALL_NO_SKILLS=1` to skip it, or run the command yourself later).
+   Bootstrap fetches `manifest.json` from this repository (`main`; override
+   with `--source <raw-url>`), validates each skill, and writes:
+   - `~/.agents/skills/<id>/` - the skill files (read by Codex)
+   - `~/.claude/skills/<id>` - a relative symlink to the folder above (read by
      Claude Code)
-   - `skills-lock.json` - the [skills.sh](https://skills.sh) lockfile:
-     `source`, `sourceType`, `skillPath`, and `computedHash` per skill. Commit
-     it with the skill folders.
-3. Start Codex or Claude Code in that repository and ask for the skill, e.g.
+   - `~/.agents/skills-lock.json` - a lockfile in the
+     [skills.sh](https://skills.sh) format: `source`, `sourceType`,
+     `skillPath`, and `computedHash` per skill.
+2. Open any repository in Codex or Claude Code and ask for the skill, e.g.
    "Use the ploy-site skill to migrate this site into Ploy." The skill tells
    the agent when `ploy login` becomes necessary.
-4. Keep skills current with `ploy skills sync --check` (exit 1 on a local edit
-   or a newer published version; use it as a pre-commit or CI gate) and
-   `ploy skills sync` to reinstall drifted skills and refresh the lock. Because
-   the lockfile is the skills.sh format, `npx skills check` and
-   `npx skills update` work on the same file when Node is available.
+3. Keep skills current with `ploy skills sync --check` (exit 1 on a local edit
+   or a newer published version) and `ploy skills sync` to reinstall drifted
+   skills and refresh the lock. Both work from any directory without login.
 
 `ploy skills bootstrap` never replaces a same-name skill folder it did not
-record; pass `--force` to take it over.
+record; pass `--force` to take it over. Skills that Ploy manages for a Ploy
+site (`ploy skills init`/`sync` inside the site) stay per repository and are
+separate from this user-level set.
 
 ### Use
 
