@@ -10,6 +10,9 @@ failing. Upgrade through the installer if needed. If the server does not
 support these commands, report the release blocker rather than creating sites
 repeatedly or switching to a paid integration.
 
+For an existing Ploy site changing workspaces, use
+[workspace transfer](workspace-transfer.md) for its dependencies and cutover.
+
 ## Assess compatibility and choose scope
 
 Inspect the source checkout, committed tree, framework configuration, routes,
@@ -64,9 +67,11 @@ For a multi-site test, record each source, destination ID, and checkout binding.
 
 Select the intended workspace with `ploy workspace use --id <workspace-id>`.
 If there are none, run `ploy workspace create --name "My website" --json`, then
-select the returned workspace ID. Workspace creation also provisions a default
-Astro site: select the returned `defaultSiteId`, poll `ploy site status --json`
-until ready, and use it as the destination. Skip `site init` in that case.
+select the returned workspace ID. Inspect the returned `defaultSiteId` with
+`site status` before cloning: the default can remain unprovisioned and Git clone
+can fail. Reuse it if ready. If it is verified empty with no usable repository,
+create the intended destination with `site init` below, record both IDs, and
+include the unused default in the authorized cleanup.
 For an existing workspace that needs a new destination:
 
 ```sh
@@ -299,7 +304,6 @@ is deployed.
 Report the source commit, verified commit, build/browser results, and any
 unmigrated behavior. No claim of deployment success is justified by local build
 or Git sync alone.
-
 
 The original GitHub repo remains a source snapshot. Later source changes need an
 explicit port into the migrated checkout; this workflow does not maintain two

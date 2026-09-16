@@ -1,6 +1,10 @@
 {
   "version": 1,
   "skills": {
-    "ploy-site": ["SKILL.md", "references/migration.md"]
+    "ploy-site": [
+      "SKILL.md",
+      "references/migration.md",
+      "references/workspace-transfer.md"
+    ]
   }
 }
