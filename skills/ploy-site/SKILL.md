@@ -1,6 +1,6 @@
 ---
 name: ploy-site
-description: Build or migrate a website from an existing GitHub or local codebase into Ploy's Astro starter, then sync local edits with Ploy using the Ploy CLI. Use for whole-site or selected-page migration, continued editing of a Ploy checkout, or publishing when requested.
+description: Build or migrate a website from an existing GitHub or local codebase into Ploy's Astro starter, then sync local edits with Ploy using the Ploy CLI. Use for transfers between Ploy workspaces, whole-site or selected-page migration, continued editing of a Ploy checkout, or publishing when requested.
 ---
 
 # Build and migrate with Ploy
@@ -8,6 +8,11 @@ description: Build or migrate a website from an existing GitHub or local codebas
 Work as the local coding agent. Use the Ploy CLI for account/site operations
 and Git for source changes. Ploy hosts the destination as Astro on Cloudflare
 Workers; connecting a generic repository does not make it compatible.
+
+For an existing Ploy site moving between workspaces, read
+[the workspace transfer procedure](references/workspace-transfer.md) instead.
+It covers code, databases, assets, environment, forms, documents, domain cutover,
+and separate source cleanup. A rendered-site clone does not preserve these.
 
 Read [the migration guide](references/migration.md) before setup, importing,
 porting code, or syncing. It owns the command sequence and runtime constraints.

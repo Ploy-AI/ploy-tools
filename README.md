@@ -15,17 +15,17 @@ to install, and the skills tell the agent when a Ploy login is required.
 
 | Skill | Purpose |
 | --- | --- |
-| [`ploy-site`](skills/ploy-site/SKILL.md) | Build or migrate an existing GitHub or local website into Ploy's Astro runtime, then sync local edits with the Ploy CLI. |
+| [`ploy-site`](skills/ploy-site/SKILL.md) | Build or migrate a website into Ploy, sync local edits, or copy a Ploy site and its dependencies between workspaces. |
 
 ### Install
 
-**Ploy CLI** (installs the skills for your user, so every project sees them)
+**Ploy CLI** (required to run the skill’s site operations)
 
 ```sh
 curl -fsSL https://ploy.ai/install.sh | sh
 ```
 
-The others install into the repository you run them in.
+Install the public skill separately with one of the methods below.
 
 **skills.sh**
 
@@ -73,33 +73,15 @@ Cursor reads `.cursor/skills/`.
 
 ### Workflow with the Ploy CLI
 
-The native `ploy` binary needs no Node, npm, or Ploy login for this flow. The
-skills here are user-level: they are meant for a user working in their own
-codebase with their own Codex or Claude subscription, before a Ploy site
-exists, so they are installed once per machine rather than per repository.
+Install the CLI with the command above, then install this public skill with
+`npx skills add Ploy-AI/ploy-tools` or one of the plugin methods. Open your
+coding agent and ask it to use `ploy-site`. The skill tells you when to run
+`ploy login`; workspace transfers require CLI 0.12.0 or newer.
 
-1. Install the CLI: `curl -fsSL https://ploy.ai/install.sh | sh`. The
-   installer runs `ploy skills bootstrap` for you (set
-   `PLOY_INSTALL_NO_SKILLS=1` to skip it, or run the command yourself later).
-   Bootstrap fetches `manifest.json` from this repository (`main`; override
-   with `--source <raw-url>`), validates each skill, and writes:
-   - `~/.agents/skills/<id>/` - the skill files (read by Codex)
-   - `~/.claude/skills/<id>` - a relative symlink to the folder above (read by
-     Claude Code)
-   - `~/.agents/skills-lock.json` - a lockfile in the
-     [skills.sh](https://skills.sh) format: `source`, `sourceType`,
-     `skillPath`, and `computedHash` per skill.
-2. Open any repository in Codex or Claude Code and ask for the skill, e.g.
-   "Use the ploy-site skill to migrate this site into Ploy." The skill tells
-   the agent when `ploy login` becomes necessary.
-3. Keep skills current with `ploy skills sync --check` (exit 1 on a local edit
-   or a newer published version) and `ploy skills sync` to reinstall drifted
-   skills and refresh the lock. Both work from any directory without login.
-
-`ploy skills bootstrap` never replaces a same-name skill folder it did not
-record; pass `--force` to take it over. Skills that Ploy manages for a Ploy
-site (`ploy skills init`/`sync` inside the site) stay per repository and are
-separate from this user-level set.
+CLI 0.12.0's `ploy skills init` and `ploy skills sync` manage the authenticated
+Ploy site skill bundle, including user-wide directories with `--user`. They do
+not install this repository's public skill, and `skills bootstrap` is not a
+command in that release. Use the public skill's installer to update it.
 
 ### Use
 
@@ -111,11 +93,21 @@ The agent inspects the source, offers a whole-site or selected-page migration,
 builds into a Ploy Astro destination, verifies it, and pushes with the
 [Ploy CLI](https://ploy.ai/docs/cli). Publishing only happens when you ask.
 
+To copy a site between Ploy workspaces:
+
+> Use the ploy-site skill to copy my site into another workspace. Verify the
+> destination and let me review it before moving traffic or deleting the source.
+
+The [workspace transfer procedure](skills/ploy-site/references/workspace-transfer.md)
+covers source code, databases, assets, environment, forms and documents, then
+separately handles domain cutover and approved cleanup. These operations require
+both workspaces in the same organization and admin/owner access.
+
 ### Layout
 
 - `skills/<id>/` - one folder per skill, the format read by Codex, Claude Code,
   and skills.sh
-- `manifest.json` - file list per skill, read by `ploy skills bootstrap`
+- `manifest.json` - explicit file list per skill for bundle consumers
 - `.claude-plugin/` - Claude Code plugin and marketplace metadata; Codex reads
   the same `marketplace.json`
 - `plugin.json` - Agent Plugins manifest read by Cursor and other
@@ -123,8 +115,8 @@ builds into a Ploy Astro destination, verifies it, and pushes with the
 
 Add a skill by creating `skills/<id>/SKILL.md` with `name` and `description`
 frontmatter and listing every file in `manifest.json`. Editing a published
-file is enough to ship an update: `ploy skills sync --check` and
-`npx skills check` compare installed folder hashes with `main`.
+file publishes an update on `main`; use `npx skills update ploy-site` to update
+the installed public skill.
 
 ### License
 
