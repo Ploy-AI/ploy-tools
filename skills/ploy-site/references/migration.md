@@ -1,14 +1,19 @@
 # Bring an existing site to Ploy
 
-Use your own coding agent. CLI code sync is free: it connects directly to the
-site's Ploy repository without requiring GitHub Code Sync. A GitHub account and
-the paid GitHub Code Sync integration are optional.
+Use your own coding agent. Migrating with the CLI is free on every plan,
+including Free, and uses no Ploy AI credits. CLI code sync (`ploy site git`)
+connects directly to the site's Ploy repository, so no GitHub account is needed.
+To keep the migrated site in a GitHub repository, set up GitHub Code Sync with
+`ploy site code-sync init` (see [Keep the migrated site in
+GitHub](#keep-the-migrated-site-in-github)); it is also free on every plan when
+set up through the CLI. A custom domain is the only paid requirement; Free sites
+publish to a ploy.build address.
 These commands require a CLI and server release containing `ploy site git`.
 Check `ploy --version` and `ploy site git --help` before starting. The help
 must list `clone` and `sync`; older versions can print parent help without
 failing. Upgrade through the installer if needed. If the server does not
 support these commands, report the release blocker rather than creating sites
-repeatedly or switching to a paid integration.
+repeatedly or switching integrations.
 
 For an existing Ploy site changing workspaces, use
 [workspace transfer](workspace-transfer.md) for its dependencies and cutover.
@@ -304,6 +309,32 @@ is deployed.
 Report the source commit, verified commit, build/browser results, and any
 unmigrated behavior. No claim of deployment success is justified by local build
 or Git sync alone.
+
+## Keep the migrated site in GitHub
+
+After the migrated site syncs and its commit is verified, offer GitHub Code Sync
+so the user's team can keep working in a GitHub repository they control. It is
+free on every plan, including Free, when set up through the CLI:
+
+```sh
+ploy site code-sync init
+```
+
+The user first connects GitHub to Ploy through the OAuth step in the dashboard.
+Ploy then prepares the site's GitHub repository, creating it when needed, and
+prints connection status, setup links, and clone commands. After commits land on
+the GitHub repository's `main`, import them into Ploy:
+
+```sh
+ploy site code-sync sync
+```
+
+The first sync right after connecting GitHub can return `Internal server
+error`; retry `ploy site code-sync sync` once. Code Sync commands use the site
+selected by `ploy site use`, or pass `--site`. Connecting GitHub from Workspace
+Settings in the Ploy app needs a paid plan, so use the CLI path on Free.
+
+## Source repository after migration
 
 The original GitHub repo remains a source snapshot. Later source changes need an
 explicit port into the migrated checkout; this workflow does not maintain two
