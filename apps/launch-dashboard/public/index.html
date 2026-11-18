@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f5"><meta name="description" content="A read-only launch workspace. Explore a safe preview or view your own Notion export locally.">
+  <title>Ploy 2.0 · Launch room</title>
+  <link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+  <link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to launch items</a>
+  <aside class="sidebar">
+    <div class="wordmark">ploy<span>2.0</span></div>
+    <p class="eyebrow">LAUNCH WORKSPACE</p>
+    <nav aria-label="Launch views" id="views">
+      <button data-scope="remaining" aria-pressed="true">Overview <span>↗</span></button>
+      <button data-scope="blockers" aria-pressed="false">Launch blockers <span id="navBlockers"></span></button>
+      <button data-scope="high" aria-pressed="false">High priority</button>
+      <button data-scope="unassigned" aria-pressed="false">Needs an owner</button>
+      <button data-scope="all" aria-pressed="false">All items</button>
+    </nav>
+    <section class="sidebar-note"><span class="lock">READ-ONLY BY DESIGN</span><p>No edits. No sync writes.<br>Your originals stay in Notion.</p><button class="text-button" id="about">How data works ↗</button></section>
+    <a class="request-link" href="https://app.devin.ai/sessions/fcade5305c4a4523b1f2c73ae404f2fb" target="_blank" rel="noopener noreferrer">Request changes ↗</a>
+  </aside>
+  <main id="main">
+    <header><div class="breadcrumb">Ploy 2.0 <span>/</span> Launch room</div><span class="readonly">Read-only snapshot</span></header>
+    <section class="heading"><div><p class="eyebrow">THE ROAD TO LAUNCH</p><h1>Make the remaining<br class="desktop-break"> work visible.</h1><p class="subtitle">Blockers first. Clear owners. One shared view.</p></div><div class="import-actions"><button class="primary" id="import">Import your snapshot <span>↑</span></button><button class="text-button" id="resetDemo" hidden>Clear local data</button><input type="file" id="file" accept=".csv,.json" hidden></div></section>
+    <section class="privacy-notice" aria-label="Data provenance"><span class="notice-icon">i</span><div><strong id="mode">Safe preview · illustrative data only</strong><p id="provenance">These are fictional examples, not the Ploy launch status. Notion visibility has not been verified for every App viewer.</p><small id="timestamp">Source snapshot: not connected</small></div></section>
+    <p role="alert" id="error" hidden></p>
+    <section class="metrics" aria-label="Snapshot totals" id="metrics"></section>
+    <section class="work-section">
+      <div class="section-title"><div><h2 id="viewTitle">Remaining work</h2><p id="viewSubtitle">Launch blockers appear first, then priority.</p></div><div class="segmented" aria-label="Display mode"><button id="listMode" aria-pressed="true">List</button><button id="boardMode" aria-pressed="false">Board</button></div></div>
+      <div class="filters"><label class="search-label"><span class="sr-only">Search items</span><input type="search" id="search" placeholder="Search work, owners, notes…"></label><label><span class="sr-only">Owner</span><select id="owner"><option value="">All owners</option></select></label><label><span class="sr-only">Priority</span><select id="priority"><option value="">All priorities</option></select></label><label><span class="sr-only">Status</span><select id="status"><option value="">All statuses</option></select></label><button id="clear" class="text-button">Reset filters</button></div>
+      <div class="result-line"><span id="count" role="status" aria-live="polite"></span><span>Click an item for context</span></div>
+      <div id="results"></div>
+    </section>
+    <footer><span id="footerMode">Sample data · not a launch-readiness assessment</span><span>Notion is the source of truth.</span></footer>
+  </main>
+  <dialog id="detail"><button class="dialog-close" aria-label="Close item details">×</button><div id="detailContent"></div></dialog>
+  <dialog id="help"><button class="dialog-close" aria-label="Close data information">×</button><p class="eyebrow">YOUR DATA, YOUR VIEW</p><h2>A snapshot, not a second tracker.</h2><p>This App is visible to your Devin organization. The default preview contains only fictional examples because org-wide permission to the Notion source has not been verified.</p><h3>Try your own data privately</h3><ol><li>Open a Notion view you are allowed to access. Apply the Ploy 2.0 filter you want.</li><li>Export the view as CSV, then import the unzipped CSV here. An exported view may include more rows than its visible filter; check the exported file.</li><li>Filter and explore. File contents stay in this tab’s memory; they are not uploaded, saved, or shared with other viewers.</li></ol><p>Reload or choose “Clear local data” to discard it. Screen sharing can still expose what you view.</p><h3>Supported columns</h3><p><b>Item</b> (or Name/title), Owner (or Assigned to), Status, Priority, Launch blocker, Category, Notes, URL. Multiple owners can be comma-separated. Launch blockers are explicit; priority alone never marks a blocker.</p><p>JSON accepts an array or <code>{ "snapshotAt": "ISO timestamp", "items": [...] }</code>. CSV imports show import time, not the unknown source snapshot time. Original links are available only when the export includes a valid HTTPS Notion URL.</p><p>No live refresh, production access, analytics, or Notion writes. Counts describe imported rows only, not a launch verdict.</p></dialog>
+</body></html>
